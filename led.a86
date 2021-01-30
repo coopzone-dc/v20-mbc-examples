@@ -21,6 +21,8 @@ main:
 ;
 done:	xor	al,al	;zero led, off
 	call	led
+	mov	bx, offset bye
+	call	puts
 	mov	cl,0	;exit to bdos
 	int	BDOS
 ;

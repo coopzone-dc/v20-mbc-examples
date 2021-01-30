@@ -32,6 +32,8 @@ done:	cmp	al,'w'
 	jmp	main
 finish:	xor	al,al	;zero led, off
 	call	gpio
+	mov	bx,offset bye
+	call	puts
 	mov	cl,0	;exit to bdos
 	int	BDOS
 ;
