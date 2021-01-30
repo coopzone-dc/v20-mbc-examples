@@ -1,0 +1,82 @@
+;Test user LED and key
+;
+BDOS	equ	224	;cp/m-86 BDOS entry point
+USRLED	equ	0	;optcode for user LED
+USRKEY	equ	80h	;optcode for user switch
+DPORT	equ	0	;data i/o port
+CPORT	equ	1	;Command control port
+;
+	CSEG		;code seg
+	mov	bx,offset msg	;say hello
+	call	puts
+main:
+	mov	al,1	;out 1 turn led on
+	call	led
+	call	delay
+	jnz	done
+	mov	al,0
+	call	led
+	call	delay
+	jz	main
+;
+done:	xor	al,al	;zero led, off
+	call	led
+	mov	cl,0	;exit to bdos
+	int	BDOS
+;
+puts:
+	mov	al,[BX]	;get the char to print
+	test	al,al
+	jz	return	;finished
+	mov	CL,2	;console output
+	push	dx	;save
+	push	bx
+	mov	dl,al	;char to print
+	int	BDOS	;print it
+	pop	bx
+	pop	dx	;restor local regs
+	inc	bx
+	jmp	puts	;next char to print
+led:
+	push	ax	;save the led value
+	mov	al,USRLED	; LED optcode
+	out	CPORT,al
+	pop	ax	;get the on/off value
+	out	DPORT,al
+return:	
+	ret
+delay:
+	mov	cx,0005h	;outer loop
+lp1:	push	cx		;save outer counter
+	mov	cx,0210h	;inner loop
+lp2:	push	cx		;save counter
+	mov	cl,6		;bdox function direct io
+	mov	dl,0FEh		;see if a key is pressed
+	int	BDOS
+	or	al,al		;check for 0
+	jnz	exit1		;if char then exit
+;No keyboard key pressed also check user key
+	mov	al,USRKEY	;user key port cmd
+	out	CPORT,al
+	in	al,DPORT	;get key
+	and	al,1		;bit 0 key press=1
+	jnz	exit1		;user key pressed
+	pop	cx		;no key pressed so round again
+	loop	lp2
+	pop	cx		;outer loop
+	loop	lp1
+	xor	al,al
+	ret			;return after tmer no key
+exit1:	pop	cx
+	pop	cx
+	ret
+;
+;	end
+;
+	DSEG		;data segment
+	org	100h
+	msg	db	'User LED test, any key to exit'
+		db	0ah,0dh,0
+	bye	db	'Exit'
+		db	0ah,0dh,0
+	end

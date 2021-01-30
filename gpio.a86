@@ -1,0 +1,123 @@
+;Test GPIO LED and key
+;
+BDOS	equ	224	;cp/m-86 BDOS entry point
+IODIRA	equ	5	;gpio port A input/output direction
+GPIOA	equ	3	;gpio port A data
+USRKEY	equ	80h	;optcode for user switch
+DPORT	equ	0	;data i/o port
+CPORT	equ	1	;Command control port
+;
+	CSEG		;code seg
+	mov	bx,offset msg	;say hello
+	call	puts
+;setup the GPIO chip Port A as output
+	mov	al,IODIRA
+	out	CPORT,al
+	xor	al,al
+	out	DPORT,al	;all 0 means output for all bits
+main:
+	mov	al,32	;turn on led, GPIOA5=32, B0010000=32
+	call	gpio
+	call	delay
+	jnz	done
+	mov	al,0
+	call	gpio
+	call	delay
+	jz	main
+;
+done:	cmp	al,'w'
+	jnz	finish
+	mov	bx,offset dia	;print diagram
+	call	puts
+	jmp	main
+finish:	xor	al,al	;zero led, off
+	call	gpio
+	mov	cl,0	;exit to bdos
+	int	BDOS
+;
+puts:
+	mov	al,[BX]	;get the char to print
+	test	al,al
+	jz	return	;finished
+	mov	CL,2	;console output
+	push	dx	;save
+	push	bx
+	mov	dl,al	;char to print
+	int	BDOS	;print it
+	pop	bx
+	pop	dx	;restor local regs
+	inc	bx
+	jmp	puts	;next char to print
+gpio:
+	push	ax	;save the led value
+	mov	al,GPIOA	;GPIO PORT A command
+	out	CPORT,al
+	pop	ax	;get the on/off value
+	out	DPORT,al
+return:	
+	ret
+delay:
+	mov	cx,0005h	;outer loop
+lp1:	push	cx		;save outer counter
+	mov	cx,0210h	;inner loop
+lp2:	push	cx		;save counter
+	mov	cl,6		;bdox function direct io
+	mov	dl,0FFh		;read key if pressed
+	int	BDOS
+	or	al,al		;check for 0
+	jnz	exit1		;if char then exit
+;No keyboard key pressed also check user key
+	mov	al,USRKEY	;user key port cmd
+	out	CPORT,al
+	in	al,DPORT	;get key
+	and	al,1		;bit 0 key press=1
+	jnz	exit1		;user key pressed
+	pop	cx		;no key pressed so round again
+	loop	lp2
+	pop	cx		;outer loop
+	loop	lp1
+	xor	al,al
+	ret			;return after tmer no key
+exit1:	pop	cx
+	pop	cx
+	ret
+;
+;	end
+;
+	DSEG		;data segment
+	org	100h
+	bye	db	'Exit'
+		db	0ah,0dh,0
+	dia	db	'Demo HW wiring (See A250220-sch.pdf schematic):'
+		db	0ah,0dh
+		db	' GPIO'
+		db	0ah,0dh
+	        db      ' (J7)'
+        	db      0ah,0dh
+        	db      '+-----+'
+        	db      0ah,0dh
+        	db      '| 1 2 |'
+        	db      0ah,0dh
+        	db      '| 3 4 |   LED         RESISTOR'
+        	db      0ah,0dh
+        	db      '| 5 6 |                 680'
+        	db      0ah,0dh
+        	db      '| 7 8-+--->|-----------/\/\/--+'
+        	db      0ah,0dh
+        	db      '| 9 10|                       |'
+        	db      0ah,0dh
+        	db      '|11 12|                       |'
+        	db      0ah,0dh
+        	db      '|13 14|                       |'
+        	db      0ah,0dh
+        	db      '|15 16|                       |'
+        	db      0ah,0dh
+        	db      '|17 18|                       |'
+        	db      0ah,0dh
+        	db      '|19 20+-----------------------+ GND'
+        	db      0ah,0dh
+        	db      '+-----+'
+		db	0ah,0dh
+	msg	db	'User GPIO test, press w for diagram, any key to exit'
+		db	0ah,0dh,0
+	end
