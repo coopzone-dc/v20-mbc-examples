@@ -1,0 +1,36 @@
+;Test GPIO LED and key
+;
+BDOS	equ	224	;cp/m-86 BDOS entry point
+;
+	CSEG		;code seg
+	mov	bx,offset msg	;say hello
+	call	puts
+;
+	hlt
+;
+ 	mov	cl,0
+	int	BDOS
+;
+puts:
+	mov	al,[BX]	;get the char to print
+	test	al,al
+	jz	return	;finished
+	mov	CL,2	;console output
+	push	dx	;save
+	push	bx
+	mov	dl,al	;char to print
+	int	BDOS	;print it
+	pop	bx
+	pop	dx	;restor local regs
+	inc	bx
+	jmp	puts	;next char to print
+return:	
+	ret
+;
+;	end
+;
+	DSEG		;data segment
+	org	100h
+	msg	db	'Turning on HALT LED by forcing cpu halt, you need to press reset to exit'
+		db	0ah,0dh,0h
+	end

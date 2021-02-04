@@ -17,7 +17,7 @@ CPORT	equ	1	;Command control port
 	xra	a
 	out	DPORT	;all 0 means output for all bits
 main:
-	mvi	al,32	;turn on led, GPIOA5=32, B0010000=32
+	mvi	al,32	;turn on led, GPIOA5=32, B00100000=32
 	call	gpio
 	call	delay
 	jnz	done
@@ -59,10 +59,12 @@ return:
         ret
 
 delay:
-        lxi     b,0005h ;outer loop
+;timer is complete guess work with cpu at 8mhz
+        lxi     b,0005h ;outer loop,
+
 lp1:    push    b               ;save outer counter
         lxi     b,0210h ;inner loop
-lp2:    push    b               ;save counter
+lp2:    push    b               ;save inner counter
         mvi     c,6             ;bdox function direct io
         mvi     e,0FFh          ;see if a key is pressed
         call    BDOS
@@ -75,15 +77,15 @@ lp2:    push    b               ;save counter
         ani     1               ;bit 0 key press=1
         jnz     exit1           ;user key pressed
         pop     b               ;no key pressed so round again
-        dcx     b
-        mov     a,b
+        dcx     b		;count down
+        mov     a,b		;are both b and c =0
         ora     c
-        jnz     lp2
+        jnz     lp2		;keep going
         pop     b               ;outer loop
-        dcx     b
+        dcx     b		;loop countdown and repeat
         mov     a,b
         ora     c
-        jnz     lp1
+        jnz     lp1		;keep going
         xra     a
         ret                     ;return after tmer no key
 exit1:  pop     b
