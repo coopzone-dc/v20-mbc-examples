@@ -27,22 +27,23 @@ main:
 	call	delay
 	jz	main
 ;
-done:	cpi	'w'
-	jnz	finish
+done:	cpi	'w'     ;did the delay routine end with a w pressed?
+	jnz	finish	;if no then we realy have finished
 	lxi	h, dia	;print diagram
 	call	puts
-	jmp	main
+	jmp	main	;continue in our execution loop
+;
 finish:	xra	a	;zero led, off
 	call	gpio
-	lxi	h, bye
+	lxi	h, bye 	;say by then exit to cp/m
 	call	puts
 	mvi	c,0	;exit to bdos
-	call	BDOS
+	call	BDOS	;This never returns to us, could use jmp 0
 ;
 puts:
         mov     a,m     ;get the char to print
         ora     a       ;is it zero
-        jz      return  ;finished
+        rz		;if it's a 0 then return
         mvi     c,2     ;console output
         mov     e,a     ;char to print
         push    h
@@ -52,43 +53,44 @@ puts:
         jmp     puts    ;next char to print
 gpio:
         push    psw     ;save the led value
-        mvi     a,GPIOA        ; port optcode
+        mvi     a,GPIOA ;port optcode
         out     CPORT
         pop     psw     ;get the on/off value
         out     DPORT
-return:
         ret
 
 delay:
 ;timer is complete guess work with cpu at 8mhz
         lxi     b,0005h ;outer loop,
-
-lp1:    push    b               ;save outer counter
+;outer looo starts
+lp1:    push    b       ;save outer counter
         lxi     b,0210h ;inner loop
-lp2:    push    b               ;save inner counter
-        mvi     c,6             ;bdox function direct io
-        mvi     e,0FFh          ;see if a key is pressed
+;inner-loop starts
+lp2:    push    b       ;save inner counter
+        mvi     c,6     ;bdox function direct io
+        mvi     e,0FFh  ;see if a key is pressed
         call    BDOS
-        ora     a               ;check for 0
-        jnz     exit1           ;if char then exit
+        ora     a       ;check for 0 would be no-key
+        jnz     exit1   ;if char then exit
 ;No keyboard key pressed also check user key
-        mvi     a,USRKEY        ;user key port cmd
+        mvi     a,USRKEY ;user key port cmd
         out     CPORT
         in      DPORT   ;get key
-        ani     1               ;bit 0 key press=1
-        jnz     exit1           ;user key pressed
-        pop     b               ;no key pressed so round again
-        dcx     b		;count down
-        mov     a,b		;are both b and c =0
+        ani     1       ;bit 0 key press=1
+        jnz     exit1   ;user key pressed
+        pop     b       ;no key pressed so count down
+        dcx     b	;count down
+        mov     a,b	;are both b and c =0
         ora     c
-        jnz     lp2		;keep going
-        pop     b               ;outer loop
-        dcx     b		;loop countdown and repeat
+        jnz     lp2	;keep going,iner loop
+;
+        pop     b       ;outer loop
+        dcx     b	;loop countdown and repeat
         mov     a,b
         ora     c
-        jnz     lp1		;keep going
+        jnz     lp1	;keep going,outer loop
         xra     a
-        ret                     ;return after tmer no key
+        ret             ;return if both loops=0 and no key
 exit1:  pop     b
         pop     b
         ret
@@ -127,4 +129,4 @@ dia	db	'Demo HW wiring (See A250220-sch.pdf schematic):'
 	db	0ah,0dh
 msg	db	'User GPIO test, press w for diagram, any key to exit'
 	db	0ah,0dh,0
-
+

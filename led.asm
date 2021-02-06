@@ -13,23 +13,23 @@ main:
 	mvi	a,1	;out 1 turn led on
 	call	led
 	call	delay
-	jnz	done
+	jnz	done	;if delay returned as non-zero
 	xra	a	;zero the led=0
 	call	led
 	call	delay
-	jz	main
+	jz	main	;if delay returned a zero, no key-press
 ;
 done:	xra	a	;zero led, off
 	call	led
-	lxi	h, bye
+	lxi	h, bye	;say bye and exit
 	call	puts
 	mvi	c,0	;exit to bdos
-	call	BDOS
+	call	BDOS	;you could just do jmp 0
 ;
 puts:
 	mov	a,m	;get the char to print
 	ora	a	;is it zero
-	jz	return	;finished
+	rz		;return if zero, end of message
 	mvi	c,2	;console output
 	mov	e,a	;char to print
 	push	h
@@ -39,41 +39,40 @@ puts:
 	jmp	puts	;next char to print
 led:
 	push	psw	;save the led value
-	mov	a,USRLED	; LED optcode
+	mov	a,USRLED ;LED optcode
 	out	CPORT
 	pop	psw	;get the on/off value
 	out	DPORT
-return:	
 	ret
 delay:
 	lxi	b,0005h	;outer loop
-lp1:	push	b		;save outer counter
+lp1:	push	b	;save outer counter
 	lxi	b,0210h	;inner loop
-lp2:	push	b		;save counter
-	mvi	c,6		;bdox function direct io
-	mvi	e,0FFh		;see if a key is pressed
+lp2:	push	b	;save counter
+	mvi	c,6	;bdox function direct io
+	mvi	e,0FFh	;see if a key is pressed
 	call	BDOS
-	ora	a		;check for 0
-	jnz	exit1		;if char then exit
+	ora	a	;check for 0
+	jnz	exit1	;if char then exit
 ;No keyboard key pressed also check user key
-	mvi	a,USRKEY	;user key port cmd
+	mvi	a,USRKEY ;user key port cmd
 	out	CPORT
 	in	DPORT	;get key
-	ani	1		;bit 0 key press=1
-	jnz	exit1		;user key pressed
-	pop	b		;no key pressed so round again
-	dcx	b
+	ani	1	;bit 0 key press=1
+	jnz	exit1	;user key pressed
+	pop	b	;no key pressed so round again
+	dcx	b	;count down inner loop
 	mov	a,b
-	ora	c
-	jnz	lp2
-	pop	b		;outer loop
-	dcx	b
+	ora	c	;if bc=0
+	jnz	lp2	;inner loop
+	pop	b	;outer loop counter
+	dcx	b	;count down
 	mov	a,b
-	ora	c
-	jnz 	lp1
-	xra	a
-	ret			;return after tmer no key
-exit1:	pop	b
+	ora	c	;if bc=0
+	jnz 	lp1	;not yet zero
+	xra	a	;end with led off
+	ret		;return after tmer no key
+exit1:	pop	b	;exit because key pressed,loose counters
 	pop	b
 	ret
 ;
@@ -81,3 +80,4 @@ exit1:	pop	b
 		db	0ah,0dh,0
 	bye	db	'Exit'
 		db	0ah,0dh,0
+
