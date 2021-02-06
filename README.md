@@ -8,5 +8,7 @@ And here is an outline article showing how to use the programs.
 https://www.instructables.com/V20-MBC-Assembly-Language-Programs/
 
 The .a86 versions are for 8088/86 cp/m-86 OS
+and the .cmd are executable versions.
 
-the .asm versions are for 8080 cp/m-2.2 OS
+The .asm versions are for 8080 cp/m-2.2 OS
+and the .com are executable versions.
