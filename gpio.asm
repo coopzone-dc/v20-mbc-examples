@@ -16,8 +16,9 @@ CPORT	equ	1	;Command control port
 	out	CPORT
 	xra	a
 	out	DPORT	;all 0 means output for all bits
+
 main:
-	mvi	al,32	;turn on led, GPIOA5=32, B00100000=32
+	mvi	a,32	;turn on led, GPIOA5=32, B00100000=32
 	call	gpio
 	call	delay
 	jnz	done
@@ -33,7 +34,7 @@ done:	cpi	'w'
 	jmp	main
 finish:	xra	a	;zero led, off
 	call	gpio
-	mov	h, bye
+	lxi	h, bye
 	call	puts
 	mvi	c,0	;exit to bdos
 	call	BDOS
@@ -51,7 +52,7 @@ puts:
         jmp     puts    ;next char to print
 gpio:
         push    psw     ;save the led value
-        mov     a,USRLED        ; LED optcode
+        mvi     a,GPIOA        ; port optcode
         out     CPORT
         pop     psw     ;get the on/off value
         out     DPORT
@@ -92,37 +93,38 @@ exit1:  pop     b
         pop     b
         ret
 ;
-	bye	db	'Exit'
-		db	0ah,0dh,0
-	dia	db	'Demo HW wiring (See A250220-sch.pdf schematic):'
-		db	0ah,0dh
-		db	' GPIO'
-		db	0ah,0dh
-	        db      ' (J7)'
-        	db      0ah,0dh
-        	db      '+-----+'
-        	db      0ah,0dh
-        	db      '| 1 2 |'
-        	db      0ah,0dh
-        	db      '| 3 4 |   LED         RESISTOR'
-        	db      0ah,0dh
-        	db      '| 5 6 |                 680'
-        	db      0ah,0dh
-        	db      '| 7 8-+--->|-----------/\/\/--+'
-        	db      0ah,0dh
-        	db      '| 9 10|                       |'
-        	db      0ah,0dh
-        	db      '|11 12|                       |'
-        	db      0ah,0dh
-        	db      '|13 14|                       |'
-        	db      0ah,0dh
-        	db      '|15 16|                       |'
-        	db      0ah,0dh
-        	db      '|17 18|                       |'
-        	db      0ah,0dh
-        	db      '|19 20+-----------------------+ GND'
-        	db      0ah,0dh
-        	db      '+-----+'
-		db	0ah,0dh
-	msg	db	'User GPIO test, press w for diagram, any key to exit'
-		db	0ah,0dh,0
+bye	db	'Exit'
+	db	0ah,0dh,0
+dia	db	'Demo HW wiring (See A250220-sch.pdf schematic):'
+	db	0ah,0dh
+	db	' GPIO'
+	db	0ah,0dh
+        db      ' (J7)'
+       	db      0ah,0dh
+       	db      '+-----+'
+       	db      0ah,0dh
+       	db      '| 1 2 |'
+       	db      0ah,0dh
+       	db      '| 3 4 |   LED         RESISTOR'
+       	db      0ah,0dh
+       	db      '| 5 6 |                 680'
+       	db      0ah,0dh
+       	db      '| 7 8-+--->|-----------/\/\/--+'
+       	db      0ah,0dh
+       	db      '| 9 10|                       |'
+       	db      0ah,0dh
+       	db      '|11 12|                       |'
+       	db      0ah,0dh
+       	db      '|13 14|                       |'
+       	db      0ah,0dh
+       	db      '|15 16|                       |'
+       	db      0ah,0dh
+       	db      '|17 18|                       |'
+       	db      0ah,0dh
+       	db      '|19 20+-----------------------+ GND'
+       	db      0ah,0dh
+       	db      '+-----+'
+	db	0ah,0dh
+msg	db	'User GPIO test, press w for diagram, any key to exit'
+	db	0ah,0dh,0
+
