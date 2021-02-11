@@ -128,7 +128,7 @@ xget:	mvi 	a,1		; The first packet is number 1
 	sta 	(pktNo1c)
 
 GetNewPacket:
-	mvi	a,20		; We retry 20 times before giving up
+	mvi	a,12		; We retry 12x5s = 60 sec times before giving up
 	sta 	(retrycnt)
 
 NPloop:
@@ -273,24 +273,24 @@ Exit:
 ; returns it in A without echo and Carry clear. If timeout then Carry
 ; it set.
 ;
+;Had to tweak the timing a bit to get it about right on a v20-mbc @8mhz. It seems
+;the CONST routine takes a lot longer (relative term) than on a conventional hardware i/o 
+;serial port
+;
 GetCharTmo:
-	mov	b,a
+	mov	b,a		;a=number of seconds to poll for
 GCtmoa:
 	push	B
 	mvi	b,255
 GCtmob:
 	push	B
-	mvi	b,255
+	mvi	b,103		;around 1sec innerloop, v20-mbc @8mhz
 GCtmoc:
 	push	b
 	call	CONST
 	cpi	00h		; A char available?
 	jnz	GotChar		; Yes, get out of loop
 	lhld	0		; Waste some cycles
-	lhld	0		;...
-	lhld	0		;...
-	lhld	0		;...
-	lhld	0		;...
 	lhld	0		;...
 	pop	b
 	dcr	b

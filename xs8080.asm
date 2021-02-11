@@ -15,13 +15,13 @@
 ;copies of the Software, and to permit persons to whom the Software is
 ;furnished to do so, subject to the following conditions:
 ;
-;THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-;IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-;FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-;AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-;LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-;SOFTWARE.
+;THE SOFTWaRE IS PROVIDED "aS IS", WITHOUT WaRRaNTY OF aNY KIND, EXPRESS OR
+;IMPLIED, INCLUDING BUT NOT LIMITED TO THE WaRRaNTIES OF MERCHaNTaBILITY,
+;FITNESS FOR a PaRTICULaR PURPOSE aND NONINFRINGEMENT. IN NO EVENT SHaLL THE
+;aUTHORS OR COPYRIGHT HOLDERS BE LIaBLE FOR aNY CLaIM, DaMaGES OR OTHER
+;LIaBILITY, WHETHER IN aN aCTION OF CONTRaCT, TORT OR OTHERWISE, aRISING FROM,
+;OUT OF OR IN CONNECTION WITH THE SOFTWaRE OR THE USE OR OTHER DEaLINGS IN THE
+;SOFTWaRE.
 ;*****************************************************************************
 ;
 ;	Common entry points and locations
@@ -36,54 +36,54 @@ dbuf:	EQU	0080h
 ; BDOS function codes
 ;
 ;WBOOT:	 EQU	0	; System Reset
-;GETCON: EQU	1	; Console Input A<char
+;GETCON: EQU	1	; Console Input a<char
 ;OUTCON: EQU	2	; Console Output E=char
-;GETRDR: EQU	3	; Reader Input A<char
+;GETRDR: EQU	3	; Reader Input a<char
 ;PUNCH:	 EQU	4	; Punch Output E=char
 ;LIST:	 EQU	5	; List Output E=char
-;DIRCIO: EQU	6	; Direct Console I/O E=char/FE/FF A<char
-;GETIOB: EQU	7	; Get I/O Byte A<value
+;DIRCIO: EQU	6	; Direct Console I/O E=char/FE/FF a<char
+;GETIOB: EQU	7	; Get I/O Byte a<value
 ;SETIOB: EQU	8	; Set I/O Byte E=value
 ;PRTSTR: EQU	9	; Print $ String DE=addr
 ;RDBUFF: EQU	10	; Read Console Buffer DE=addr
-;GETCSTS:EQU	11	; Get Console Status A<status (00empty FFdata)
+;GETCSTS:EQU	11	; Get Console Status a<status (00empty FFdata)
 ;GETVER: EQU	12	; Return Version Number HL<version
 ;RSTDSK: EQU	13	; Reset Disk System
 ;SETDSK: EQU	14	; Select Disk E=diskno
-OPENFIL: EQU	15	; Open File DE=FCBaddr A<handle (FFerr)
-CLOSEFIL:EQU	16	; Close File DE=FCBaddr A<handle (FFerr)
-;GETFST: EQU	17	; Search for First DE=FCBaddr A<handle (FFerr)
-;GETNXT: EQU	18	; Search for Next A<handle (FFerr)
-;DELFILE:EQU	19	; Delete File DE=FCBaddr A<handle (FFerr)
-READSEQ: EQU	20	; Read Sequential DE=FCBaddr A<status (00ok)
-;WRTSEQ: EQU	21	; Write Sequential DE=FCBaddr A<status (00ok)
-;FCREATE:EQU	22	; Make File  DE=FCBaddr A<handle (FFerr)
-;RENFILE:EQU	23	; Rename File DE=FCBaddr A<handle (FFerr)
+OPENFIL: EQU	15	; Open File DE=FCBaddr a<handle (FFerr)
+CLOSEFIL:EQU	16	; Close File DE=FCBaddr a<handle (FFerr)
+;GETFST: EQU	17	; Search for First DE=FCBaddr a<handle (FFerr)
+;GETNXT: EQU	18	; Search for Next a<handle (FFerr)
+;DELFILE:EQU	19	; Delete File DE=FCBaddr a<handle (FFerr)
+READSEQ: EQU	20	; Read Sequential DE=FCBaddr a<status (00ok)
+;WRTSEQ: EQU	21	; Write Sequential DE=FCBaddr a<status (00ok)
+;FCREaTE:EQU	22	; Make File  DE=FCBaddr a<handle (FFerr)
+;RENFILE:EQU	23	; Rename File DE=FCBaddr a<handle (FFerr)
 ;GETLOG: EQU	24	; Return Log-in Vector HL<bitmap
-;GETCRNT:EQU	25	; Return Current Disk A<diskno
-PUTDMA:	 EQU	26	; Set DMA Address DE=addr
-;GETALOC:EQU	27	; Get Addr (ALLOC) HL<addr
+;GETCRNT:EQU	25	; Return Current Disk a<diskno
+PUTDMa:	 EQU	26	; Set DMa address DE=addr
+;GETaLOC:EQU	27	; Get addr (aLLOC) HL<addr
 ;WRTPRTD:EQU	28	; Write Protect Current Disk
 ;GETROV: EQU	29	; Get Read-Only Vector HL<bitmap
-;SETATTR:EQU	30	; Set File Attributes DE=FCBaddr A<handle
-;GETPARM:EQU	31	; Get Addr (DISKPARMS) A<DPBaddr
-;GETUSER:EQU	32	; Set/Get User Code E=code (FFget) A<value
-;RDRANDOM:EQU	33	; Read Random DE=FCBaddr A<status
-;WTRANDOM:EQU	34	; Write Random DE=FCBaddr A<status
+;SETaTTR:EQU	30	; Set File attributes DE=FCBaddr a<handle
+;GETPaRM:EQU	31	; Get addr (DISKPaRMS) a<DPBaddr
+;GETUSER:EQU	32	; Set/Get User Code E=code (FFget) a<value
+;RDRaNDOM:EQU	33	; Read Random DE=FCBaddr a<status
+;WTRaNDOM:EQU	34	; Write Random DE=FCBaddr a<status
 ;FILESIZE:EQU	35	; Compute File Size DE=FCBaddr
-;SETRAN: EQU	36	; Set Random Record DE=FCBaddr
+;SETRaN: EQU	36	; Set Random Record DE=FCBaddr
 ;LOGOFF: EQU	37	; Reset Drive DE=drivevector
-;WTSPECL:EQU	40	; Write Random with Zero Fill DE=FCBaddr A<status
+;WTSPECL:EQU	40	; Write Random with Zero Fill DE=FCBaddr a<status
 
 ;
-; ASCII codes
+; aSCII codes
 ;
 LF:	EQU	'J'-40h	; ^J LF
 CR: 	EQU 	'M'-40h	; ^M CR/ENTER
-SOH:	EQU	'A'-40h	; ^A CTRL-A
+SOH:	EQU	'a'-40h	; ^a CTRL-a
 EOT:	EQU	'D'-40h	; ^D = End of Transmission
-ACK:	EQU	'F'-40h	; ^F = Positive Acknowledgement
-NAK:	EQU	'U'-40h	; ^U = Negative Acknowledgement
+ACK:	EQU	'F'-40h	; ^F = Positive acknowledgement
+NAK:	EQU	'U'-40h	; ^U = Negative acknowledgement
 CAN:	EQU	'X'-40h	; ^X = Cancel
 
 ;
@@ -108,41 +108,41 @@ CAN:	EQU	'X'-40h	; ^X = Cancel
 	cpi	' '
 	jz	NoFileName
 
-	lxi  	D,DFCB		; Then create new file
+	lxi  	D,DFCB		; Then open a file
 	xra	a		;a=0 Start at block 0
 	sta	(DFCBcr)
 	mvi 	C,OPENFIL
-	call	BDOS		; Returns A in 255 if error opening
-	inr 	A
+	call	BDOS		; Returns a in 255 if error opening
+	inr 	a
 	jz	FailOpenFile
 
-	mvi 	A,SOH		; Start packet with SOH
+	mvi 	a,SOH		; Start packet with SOH
 	sta 	(packet)
-	mvi 	A,1		; The first packet is number 1
+	mvi 	a,1		; The first packet is number 1
 	sta 	(pktNo)
-	mvi 	A,255-1		; Also store the 1-complement of it
+	mvi 	a,255-1		; also store the 1-complement of it
 	sta 	(pktNo1c)
 
 	call	ReadSector
-	ora	A
+	ora	a
 	jnz	Done
 
 WaitForReply:
- 	mvi 	A,60		; 60 Seconds of timeout before giving up
+ 	mvi 	a,60		; 60 Seconds of timeout before giving up
  	call	GetCharTmo
  	jc	Failure
  	cpi 	CAN		; Downloader wants to abort transfer?
  	jz	Cancelled	; Yes, then we're also done
  	cpi	NAK		; Downloader want retransmit?
- 	jz	GotNAK	; Yes
+ 	jz	GotNAK		; Yes
 	cpi	ACK		; Downloader approved and wants next pkt?
 	jz	GotACK
 	jmp	WaitForReply	; Got something else. Go back and get another
 
 GotNAK:
 TransmitPacket:
-	mvi	A,132		; (Re-)Transmit the current packet
-	mov	B,A
+	mvi	a,132		; (Re-)Transmit the current packet
+	mov	b,a
 	lxi	h,packet
 xmitloop:
 	mov	c,m
@@ -163,24 +163,24 @@ GotACK:
 	dcr	m
 
 	call	ReadSector	; Fetch the next sector
-	ora	A
+	ora	a
 	jnz	Done
 	jmp	TransmitPacket
 
 ;
 ; Read the next sector from disk into the packet buffer.
-; Also calculate the checksum for the sector
-; Returns 0 in A if OK, 1 in A if EOF
+; also calculate the checksum for the sector
+; Returns 0 in a if OK, 1 in a if EOF
 ;
 ReadSector:
- 	lxi	D,data		; Set DMA address to the packet data buff
-	mvi 	C,PUTDMA
+ 	lxi	d,data		; Set DMa address to the packet data buff
+	mvi 	c,PUTDMa
 	call	BDOS
-	lxi  	D,DFCB		; File Description Block
-	mvi 	C,READSEQ
-	call	BDOS		; Returns A=0 if ok, A=1 if EOF
+	lxi  	d,DFCB		; File Description Block
+	mvi 	c,READSEQ
+	call	BDOS		; Returns a=0 if ok, a=1 if EOF
 
-	push	psw		; Need to save A for later
+	push	psw		; Need to save a for later
 
 	lxi	h,data		; Calculate checksum of the 128 data bytes
 	mvi	b,128
@@ -189,10 +189,9 @@ csloop:	add	m		; Just add up the bytes
 	inx	h
 	dcr	b
 	jnz	csloop
-	sta	(chksum)	; And store it in chksum
+	sta	(chksum)	; and store it in chksum
 
-	pop	psw		; Restore A holding the result code
-
+	pop	psw		; Restore a holding the result code
 	ret
 
 CloseFile:
@@ -204,14 +203,14 @@ Done:
 DoneLoop:
 	mov	C,EOT		; Tell receiver we're done
 	call	CONOUT
- 	mvi 	A,10
+ 	mvi 	a,10		; wait aprox 10 seconds
  	call	GetCharTmo
  	jc	DoneTmo
 	mvi	C,EOT		; Tell receiver we're done again
 	call	CONOUT
 
 DoneTmo:
- 	mvi 	A,1
+ 	mvi 	a,1
  	call	GetCharTmo	; Delay 1 second
 
 	lxi	h,msgSucces1	; Print success message and filename
@@ -244,52 +243,53 @@ Die:
 	call 	PrintString0	; Prints message and exits from program
 	call	CloseFile
 Exit:
-	lhld	(oldSP)
+	lhld	(oldSP)		;restore original stack
    	sphl
 	ret
 
 ;
-; Waits for up to A seconds for a character to become available and
-; returns it in A without echo and Carry clear. If timeout then Carry
+; Waits for up to a seconds for a character to become available and
+; returns it in a without echo and Carry clear. If timeout then Carry
 ; it set.
 ;
+;
+;Had to tweak the timing a bit to get it about right on a v20-mbc @8mhz. It seems
+;the CONST routine takes a lot longer (relative term) than on a conventional hardware i/o
+;serial port
+;
 GetCharTmo:
-	mov 	B,A
+	mov 	b,a		;a=no of seconds to poll for
 GCtmoa:
-	push	B
-	mvi	B,255
+	push	b	
+	mvi	b,255
 GCtmob:
-	push	B
-	mvi	B,255
+	push	b	
+	mvi	b,103		;on v20-mbc @ 8mhz, about 1 sec inner loop
 GCtmoc:
-	push	B
+	push	b	
 	call	CONST
-	cpi	00h		; A char available?
+	cpi	00h		; a char available?
 	jnz	GotChar		; Yes, get out of loop
 	lhld	0		; Waste some cycles
 	lhld	0		; ...
-	lhld	0		; ...
-	lhld	0		; ...
-	lhld	0		; ...
-	lhld	0		; ...
-	pop	B
+	pop	b
 	dcr	b
 	jnz	GCtmoc
-	pop	B
+	pop	b
 	dcr	b
 	jnz	GCtmob
-	pop	B
+	pop	b
 	dcr	b
 	jnz	GCtmoa
 	stc 			; Set carry signals timeout
 	ret
 
 GotChar:
-	pop	B
-	pop	B
-	pop	B
+	pop	b
+	pop	b
+	pop	b
 	call	CONIN
-	ora 	A 		; Clear Carry signals success
+	ora 	a 		; Clear Carry signals success
 	ret
 
 ;
@@ -297,9 +297,9 @@ GotChar:
 ;
 PrintString0:
 	mov	a,m
-	ora	A		; Check if got zero?
+	ora	a		; Check if got zero?
 	rz			; If zero return to caller
-	mov 	C,A
+	mov 	c,a
 	call	CONOUT		; else print the character
 	inx	h
 	jmp	PrintString0
@@ -308,47 +308,45 @@ PrintString0:
 ; Prints the 'B' bytes long string pointed to by HL, but no spaces
 ;
 PrintNoSpaceB:
-	push	B
+	push	b
 	mov	a,m		; Get character pointed to by HL
-	mov	C,A
+	mov	C,a
 	cpi	' '		; Don't print spaces
 	cnz	CONOUT
-	pop	B
-	inx	H		; Advance to next character
+	pop	b
+	inx	h	; advance to next character
 	dcr	b
 	jnz	PrintNoSpaceB	; Loop until B=0
 	ret
 ;
-;
-;
 PrintFilename:
 	lda	(DFCB)	; Print the drive
-	ora	A		; If Default drive,then...
+	ora	a		; If Default drive,then...
 	jz	PFnoDrive	; ...don't print the drive name
 	adi	'@'		; The drives are numbered 1-16...
-	mov	C,A		; ...so we need to offset to get A..P
+	mov	c,a		; ...so we need to offset to get a..P
 	call	CONOUT
 
-	mvi	C,':'		; Print colon after the drive name
+	mvi	c,':'		; Print colon after the drive name
 	call	CONOUT
 
 PFnoDrive:
 	lxi	h,DFCB+1	; Start of filename in File Control Block
-	mvi	B,8		; First part is 8 characters
+	mvi	b,8		; First part is 8 characters
 	call	PrintNoSpaceB
 
-	mvi	C,'.'		; Print the dot between filname & extension
+	mvi	c,'.'		; Print the dot between filname & extension
 	call	CONOUT
 
-	mvi 	B,3		; Then print the extension
+	mvi 	b,3		; Then print the extension
 	call	PrintNoSpaceB
 	ret
 
 ;
 ; BIOS jump table vectors to be patched
 ;
-CONST:	jmp 	0ff06h	; A=0 if no character is ready, 0FFh if one is
-CONIN:	jmp	0ff09h	; Wait until character ready available and return in A
+CONST:	jmp 	0ff06h	; a=0 if no character is ready, 0FFh if one is
+CONIN:	jmp	0ff09h	; Wait until character ready available and return in a
 CONOUT:	jmp	0ff0ch	; Write the character in C to the screen
 
 ;
