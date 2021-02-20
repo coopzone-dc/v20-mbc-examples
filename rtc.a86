@@ -1,0 +1,91 @@
+;Test RTC and Temp
+;
+BDOS	equ	224	;cp/m-86 BDOS entry point
+TMDT	equ	132	;Date/Time Optcode
+DPORT	equ	0	;data i/o port
+CPORT	equ	1	;Command control port
+;
+	CSEG		;code seg
+;write the RTC optcode to read data
+	mov	al,TMDT		;Get the time date and temp
+	out	CPORT,al
+;
+	in	al,DPORT	;get seconds
+	mov	bx,offset sec	;going to stor first number in seconds
+	call	savit
+	in	al,DPORT	;get mins
+	mov	bx,offset min	;saving mins
+	call	savit
+	in	al,DPORT	;get hours
+	mov	bx,offset hours	;save the hours
+	call	savit
+	in	al,DPORT	;get day
+	mov	bx,offset day	;save it
+	call	savit
+	in	al,DPORT	;then the month
+	mov	bx,offset month	;save it
+	call	savit
+	in	al,DPORT	;and year
+	mov	bx,offset year	;save it
+	call	savit
+	in	al,DPORT	;last the tempreture
+	mov	bx,offset temp	; store it here
+	cmp	al,128		;if it's less than 128 skip two's complement
+	jb	tempok
+	neg	al		;2's
+tempok:
+	call	savit
+	mov	bx,offset str	;print string with current RTC time etc
+	call	puts
+	mov	cl,0	;exit to bdos
+	int	BDOS
+;
+puts:
+	mov	al,[BX]	;get the char to print
+	test	al,al
+	jz	return	;finished
+	mov	CL,2	;console output
+	push	dx	;save
+	push	bx
+	mov	dl,al	;char to print
+	int	BDOS	;print it
+	pop	bx
+	pop	dx	;restor local regs
+	inc	bx
+	jmp	puts	;next char to print
+return:	
+	ret
+savit:
+	mov	ah,0	;al=number,ah=0
+	mov	cl,10	;divide by 10
+	div	cl
+	add	al,'0'	;ascii 0-9
+	mov	[bx],al	;save it
+	mov	al,ah	;get the remainder
+	add	al,'0'	;asci offset
+	inc	bx
+	mov	[bx],al
+	ret
+;	end
+;
+	DSEG		;data segment
+	org	100h
+	str	db	'Current time: '
+	hours	dw	0
+		db	':'
+	min	dw	0
+		db	':'
+	sec	dw	0
+		db	' '
+	day	dw	0
+		db	'/'
+	month	dw	0
+		db	'/'
+	year	dw	0
+		db	0ah,0dh
+		db	'Temperature:  '
+	temp	dw	0
+		db	'C'
+		db	0ah,0dh,0
+	end
+
