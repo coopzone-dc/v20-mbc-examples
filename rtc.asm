@@ -1,4 +1,4 @@
-;Test user LED and key
+;Read the RTC and Temperature
 ;
 BDOS	equ	5	;cp/m 2.2 BDOS entry point
 TMDT	equ	132	;Time/Date optcode
@@ -17,16 +17,16 @@ main:
 	in	DPORT	;get seconds
 	lxi	h,sec	;where to store it
 	call	savit
-	in	DPORT	;get seconds
+	in	DPORT	;get minutes
 	lxi	h,min	;where to store it
 	call	savit
-	in	DPORT	;get seconds
+	in	DPORT	;get hours
 	lxi	h,hours	;save it
 	call	savit
-	in	DPORT	;get seconds
+	in	DPORT	;get day
 	lxi	h,day	;where to store it
 	call	savit
-	in	DPORT	;get seconds
+	in	DPORT	;get month
 	lxi	h,month	;where to store it
 	call	savit
 	in	DPORT	;year
@@ -40,6 +40,9 @@ main:
 	inr	a	;2's compl
 tempok:
 	call	savit	;store the  temp
+;
+;all the data has been aded to the string, so print it out
+;
 	lxi	h,str	;print the results
 	call	puts		
 exit:	
@@ -60,10 +63,10 @@ puts:
 	jmp	puts	;next char to print
 ;
 savit:
-	mvi	b,'0'	;hold the result of the divide,start at ascii 0
+	mvi	b,'0'	;hold the 10's units with an ascii 0 offset
 savnxt:	xri	0	;clear carry
 	sbi	10	;subtract 10
-	jm	savdon	;if it cause a borrow then done
+	jc	savdon	;if it cause a borrow then done
 	inr	b	;add up the 10's
 	jmp	savnxt	;keep going
 savdon:	adi	'0'+10	;add back the last 10 + ascii 0
@@ -81,18 +84,18 @@ min	db	'mm'
 	db	':'
 sec	db	'ss'
 	db	' '
-day	dw	0
+day	db	'dd'
 	db	'/'
-month	dw	0
+month	db	'mm'
 	db	'/'
-year	dw	0
+year	db	'yy'
 	db	0ah,0dh
 	db	'Temperature:  '
-temp	dw	0
+temp	db	'xx'
 	db	'C'
 	db	0ah,0dh,0
 oldSP:	ds	2
 stack:	ds	64
 stackend:	equ	$
 
-
+
