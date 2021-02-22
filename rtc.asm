@@ -63,12 +63,11 @@ puts:
 	jmp	puts	;next char to print
 ;
 savit:
-	mvi	b,'0'	;hold the 10's units with an ascii 0 offset
-savnxt:	xri	0	;clear carry
-	sbi	10	;subtract 10
-	jc	savdon	;if it cause a borrow then done
+	ora	a	;zero the carry flag
+	mvi	b,-1+'0';hold the 10's units with an ascii 0 offset
+savnxt:	sbi	10	;subtract 10
 	inr	b	;add up the 10's
-	jmp	savnxt	;keep going
+	jnc	savnxt	;if it cause a borrow then done
 savdon:	adi	'0'+10	;add back the last 10 + ascii 0
 	mov	m,b	;save the 10's units
 	inx	h
@@ -98,4 +97,4 @@ oldSP:	ds	2
 stack:	ds	64
 stackend:	equ	$
 
-
+
